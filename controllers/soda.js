@@ -26,43 +26,62 @@ router.get("/seed", async (req, res) => {
 // INDUCES
 // INDEX ROUTE - GET - LIST ALL SODAS
 router.get("/", async (req, res) => {
-    const sodas = await Soda.find({}).catch((error) => errorHandler(error, res))
-    res.render("soda/index.ejs", {sodas})
+  const sodas = await Soda.find({}).catch((error) => errorHandler(error, res));
+  res.render("soda/index.ejs", { sodas });
 });
 
 // NEW ROUTE - GET - GET THE NEW FORM
 router.get("/new", (req, res) => {
-    res.render("soda/new.ejs")
-})
+  res.render("soda/new.ejs");
+});
 
 // DESTROY ROUTE - DELETE - DELETES ONE SODA
 router.delete("/:id", async (req, res) => {
-    await Soda.findByIdAndRemove(req.params.id)
-    res.redirect("/soda")
-})
+  await Soda.findByIdAndRemove(req.params.id).catch((error) =>
+    errorHandler(error, res)
+  );
+  res.redirect("/soda");
+});
 
 // UPDATE ROUTE - PUT - UPDATES ONE SODA
+router.put("/:id", async (req, res) => {
+  // make sure readyToSell is true or false
+  req.body.readyToSell = Boolean(req.body.readyToSell);
+
+  // update the soda
+  await Soda.findByIdAndUpdate(req.params.id, req.body);
+
+  // redirect to index
+  res.redirect("/soda");
+});
 
 // CREATE ROUTE - POST - CREATES A SODA
 router.post("/", async (req, res) => {
+  // make sure readyToSell is true or false
+  req.body.readyToSell = Boolean(req.body.readyToSell);
 
-    // make sure readyToSell is true or false
-    req.body.readyToSell = Boolean(req.body.readyToSell)
+  // create the soda
+  await Soda.create(req.body).catch((error) => errorHandler(error, res));
 
-    // create the soda
-    await Soda.create(req.body).catch((error) => errorHandler(error, res))
-
-    // redirect to index
-    res.redirect("/soda")
-})
+  // redirect to index
+  res.redirect("/soda");
+});
 
 // EDIT ROUTE - GET - GET THE EDIT FORM
+router.get("/:id/edit", async (req, res) => {
+  const soda = await Soda.findById(req.params.id).catch((error) =>
+    errorHandler(error, res)
+  );
+  res.render("soda/edit.ejs", { soda });
+});
 
 // SHOW ROUTE - GET - GETS ONE SODA
 router.get("/:id", async (req, res) => {
-    const soda = await Soda.findById(req.params.id)
-    res.render("soda/show.ejs", {soda})
-})
+  const soda = await Soda.findById(req.params.id).catch((error) =>
+    errorHandler(error, res)
+  );
+  res.render("soda/show.ejs", { soda });
+});
 
 // export the routes
 module.exports = router;
