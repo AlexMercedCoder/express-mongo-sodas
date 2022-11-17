@@ -31,12 +31,26 @@ router.get("/", async (req, res) => {
 });
 
 // NEW ROUTE - GET - GET THE NEW FORM
+router.get("/new", (req, res) => {
+    res.render("soda/new.ejs")
+})
 
 // DESTROY ROUTE - DELETE - DELETES ONE SODA
 
 // UPDATE ROUTE - PUT - UPDATES ONE SODA
 
 // CREATE ROUTE - POST - CREATES A SODA
+router.post("/", async (req, res) => {
+
+    // make sure readyToSell is true or false
+    req.body.readyToSell = Boolean(req.body.readyToSell)
+
+    // create the soda
+    await Soda.create(req.body).catch((error) => errorHandler(error, res))
+
+    // redirect to index
+    res.redirect("/soda")
+})
 
 // EDIT ROUTE - GET - GET THE EDIT FORM
 
