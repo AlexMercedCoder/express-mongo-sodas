@@ -3,8 +3,8 @@
 // THAT ARE LATER PLUGGED INTO ROUTES
 
 
-const Soda = require("../models/soda"); // the soda model for updating database
-const {errorHandler} = require("../utils") // errorHandler utility function
+const {Soda} = require("../../models"); // the soda model for updating database
+const {errorHandler} = require("../../utils") // errorHandler utility function
 
 
 

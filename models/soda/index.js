@@ -1,4 +1,4 @@
-const mongoose = require("./connection")
+const mongoose = require("../connection")
 
 // SODA SCHEMA - Definition/Shape of the Data Type
 const sodaSchema = new mongoose.Schema({

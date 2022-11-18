@@ -3,7 +3,7 @@
 //////////////////////////////////
 require("dotenv").config()
 const express = require("express")
-const SodaRouter = require("./controllers/soda")
+const routers = require("./routers")
 const middleware = require("./middleware")
 
 
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
     res.send("Server is Working")
 })
 
-app.use("/soda", SodaRouter)
+app.use("/soda", routers.soda)
 
 
 
