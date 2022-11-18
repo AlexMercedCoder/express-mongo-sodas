@@ -3,7 +3,7 @@
 //////////////////////////////////
 require("dotenv").config()
 const express = require("express")
-const SodaRouter = require("./controllers/soda")
+const SodaRouter = require("./routers/soda")
 const middleware = require("./middleware")
 
 
