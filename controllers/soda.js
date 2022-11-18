@@ -1,19 +1,20 @@
-const express = require("express");
-const { append } = require("express/lib/response");
-const Soda = require("../models/soda");
+// THIS FILE IS THE CONTROLLER FILE
+// IN MANY FRAMEWORKS CONTROLLERS ARE OBJECTS WITH METHODS
+// THAT ARE LATER PLUGGED INTO ROUTES
 
-// CREATE THE ROUTER
-const router = express.Router();
 
-// ERROR HANDLER
-function errorHandler(error, res) {
-  res.json(error);
-}
+const Soda = require("../models/soda"); // the soda model for updating database
+const {errorHandler} = require("../utils") // errorHandler utility function
 
-// routes
 
-// SEED ROUTE
-router.get("/seed", async (req, res) => {
+
+
+
+// CONTROLLER OBJECT WITH ALL THE CONTOLLER METHODS
+const controller = {
+
+  // SEED ROUTE - for resetting the database
+  seed: async (req, res) => {
   await Soda.remove({}).catch((error) => errorHandler(error, res));
   const sodas = await Soda.create([
     { name: "Orange", color: "Orange", readyToSell: true },
@@ -21,30 +22,30 @@ router.get("/seed", async (req, res) => {
     { name: "Root Beer", color: "Brown", readyToSell: true },
   ]).catch((error) => errorHandler(error, res));
   res.json(sodas);
-});
+  },
 
-// INDUCES
-// INDEX ROUTE - GET - LIST ALL SODAS
-router.get("/", async (req, res) => {
+  // INDUCES
+  // INDEX ROUTE - GET - LIST ALL SODAS
+  index: async (req, res) => {
   const sodas = await Soda.find({}).catch((error) => errorHandler(error, res));
   res.render("soda/index.ejs", { sodas });
-});
+  },
 
-// NEW ROUTE - GET - GET THE NEW FORM
-router.get("/new", (req, res) => {
+  // NEW ROUTE - GET - GET THE NEW FORM
+  new: (req, res) => {
   res.render("soda/new.ejs");
-});
+  },
 
-// DESTROY ROUTE - DELETE - DELETES ONE SODA
-router.delete("/:id", async (req, res) => {
+  // DESTROY ROUTE - DELETE - DELETES ONE SODA
+  destroy: async (req, res) => {
   await Soda.findByIdAndRemove(req.params.id).catch((error) =>
     errorHandler(error, res)
   );
   res.redirect("/soda");
-});
+  },
 
-// UPDATE ROUTE - PUT - UPDATES ONE SODA
-router.put("/:id", async (req, res) => {
+  // UPDATE ROUTE - PUT - UPDATES ONE SODA
+  update: async (req, res) => {
   // make sure readyToSell is true or false
   req.body.readyToSell = Boolean(req.body.readyToSell);
 
@@ -53,10 +54,10 @@ router.put("/:id", async (req, res) => {
 
   // redirect to index
   res.redirect("/soda");
-});
+  },
 
-// CREATE ROUTE - POST - CREATES A SODA
-router.post("/", async (req, res) => {
+  // CREATE ROUTE - POST - CREATES A SODA
+  create: async (req, res) => {
   // make sure readyToSell is true or false
   req.body.readyToSell = Boolean(req.body.readyToSell);
 
@@ -65,23 +66,28 @@ router.post("/", async (req, res) => {
 
   // redirect to index
   res.redirect("/soda");
-});
+  },
 
-// EDIT ROUTE - GET - GET THE EDIT FORM
-router.get("/:id/edit", async (req, res) => {
+  // EDIT ROUTE - GET - GET THE EDIT FORM
+  edit: async (req, res) => {
   const soda = await Soda.findById(req.params.id).catch((error) =>
     errorHandler(error, res)
   );
   res.render("soda/edit.ejs", { soda });
-});
+  },
 
-// SHOW ROUTE - GET - GETS ONE SODA
-router.get("/:id", async (req, res) => {
+  // SHOW ROUTE - GET - GETS ONE SODA
+  show: async (req, res) => {
   const soda = await Soda.findById(req.params.id).catch((error) =>
     errorHandler(error, res)
   );
   res.render("soda/show.ejs", { soda });
-});
+  }
 
-// export the routes
-module.exports = router;
+
+}
+
+
+
+// export the controller
+module.exports = controller;
